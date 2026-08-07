@@ -41,8 +41,10 @@ jobs:
           printf 'staging/millares-obj-001-g1\n' > public/PREVIEW_SOURCE_BRANCH.txt
           git -C site rev-parse HEAD > public/PREVIEW_SOURCE_COMMIT.txt
 
-      - name: Configure GitHub Pages
+      - name: Configure and enable GitHub Pages
         uses: actions/configure-pages@v5
+        with:
+          enablement: true
 
       - name: Upload preview artifact
         uses: actions/upload-pages-artifact@v3
