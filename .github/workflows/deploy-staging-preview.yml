@@ -1,0 +1,54 @@
+name: Deploy TERCIO staging preview
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: tercio-staging-preview
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout current TERCIO staging
+        uses: actions/checkout@v4
+        with:
+          repository: JaviFdzPlz/ibera-systems-tercio
+          ref: staging/millares-obj-001-g1
+          path: site
+
+      - name: Prepare static preview artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p public
+          rsync -a --delete --exclude='.git/' --exclude='.github/' site/ public/
+          printf 'staging/millares-obj-001-g1\n' > public/PREVIEW_SOURCE_BRANCH.txt
+          git -C site rev-parse HEAD > public/PREVIEW_SOURCE_COMMIT.txt
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload preview artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+      - name: Deploy preview
+        id: deployment
+        uses: actions/deploy-pages@v4
