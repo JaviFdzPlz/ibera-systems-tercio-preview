@@ -1,4 +1,4 @@
-name: Deploy TERCIO staging preview
+name: Deploy MILLARES staging preview
 
 on:
   push:
@@ -14,7 +14,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: tercio-staging-preview
+  group: millares-staging-preview
   cancel-in-progress: true
 
 jobs:
@@ -25,11 +25,11 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      - name: Checkout current TERCIO staging
+      - name: Checkout MILLARES R8 preview candidate
         uses: actions/checkout@v4
         with:
           repository: JaviFdzPlz/ibera-systems-tercio
-          ref: staging/millares-obj-001-g1
+          ref: refine/millares-r8-ia-evidence-v0.1-2026-08-11
           path: site
 
       - name: Prepare static preview artifact
@@ -38,7 +38,7 @@ jobs:
           set -euo pipefail
           mkdir -p public
           rsync -a --delete --exclude='.git/' --exclude='.github/' site/ public/
-          printf 'staging/millares-obj-001-g1\n' > public/PREVIEW_SOURCE_BRANCH.txt
+          printf 'refine/millares-r8-ia-evidence-v0.1-2026-08-11\n' > public/PREVIEW_SOURCE_BRANCH.txt
           git -C site rev-parse HEAD > public/PREVIEW_SOURCE_COMMIT.txt
 
       - name: Configure and enable GitHub Pages
