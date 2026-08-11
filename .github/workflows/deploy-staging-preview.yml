@@ -40,6 +40,7 @@ jobs:
           rsync -a --delete --exclude='.git/' --exclude='.github/' site/ public/
           printf 'refine/millares-r9-unanimous-prototype-v0.2-2026-08-11\n' > public/PREVIEW_SOURCE_BRANCH.txt
           git -C site rev-parse HEAD > public/PREVIEW_SOURCE_COMMIT.txt
+          # Preview refresh marker: R9 responsive QA fix included.
 
       - name: Configure and enable GitHub Pages
         uses: actions/configure-pages@v5
